@@ -1,0 +1,115 @@
+[gd_scene load_steps=19 format=3 uid="uid://cc1ggq8hvg12r"]
+
+[ext_resource type="Script" path="res://World.cs" id="1_5c77t"]
+[ext_resource type="PackedScene" uid="uid://c0frutnsxy5q4" path="res://player.tscn" id="2_urlwa"]
+[ext_resource type="PackedScene" uid="uid://dcq7omx57urww" path="res://stick.tscn" id="3_3wf7c"]
+[ext_resource type="Script" path="res://Climbable.cs" id="3_lus68"]
+[ext_resource type="PackedScene" uid="uid://cxkxrvljqrfvf" path="res://small_cube.tscn" id="4_tdtyo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c44i2"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_k1em8"]
+sky_material = SubResource("ProceduralSkyMaterial_c44i2")
+
+[sub_resource type="Environment" id="Environment_hmwoq"]
+background_mode = 2
+sky = SubResource("Sky_k1em8")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_416i0"]
+size = Vector3(10, 1, 10)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_h6521"]
+size = Vector2(10, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tqhtx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cm5do"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ionce"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pi1af"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vrrid"]
+size = Vector3(0.2, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1tblb"]
+size = Vector3(0.2, 1, 1)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_dm6h8"]
+friction = 0.2
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_umlwe"]
+friction = 0.3
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_5c77t")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_hmwoq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 8, 0)
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+script = ExtResource("3_lus68")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_416i0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("PlaneMesh_h6521")
+
+[node name="Player" parent="." instance=ExtResource("2_urlwa")]
+
+[node name="Pillar1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02506, 1.47794)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pillar1"]
+mesh = SubResource("BoxMesh_tqhtx")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pillar1"]
+shape = SubResource("BoxShape3D_cm5do")
+
+[node name="Pillar2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.300307, 1.02506, -1.43825)
+mass = 40.0
+script = ExtResource("3_lus68")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pillar2"]
+mesh = SubResource("CylinderMesh_ionce")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pillar2"]
+shape = SubResource("CylinderShape3D_pi1af")
+
+[node name="Pillar3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.43179, 1.02506, 1.47794)
+script = ExtResource("3_lus68")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pillar3"]
+mesh = SubResource("BoxMesh_vrrid")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pillar3"]
+shape = SubResource("BoxShape3D_1tblb")
+
+[node name="Stick" parent="." instance=ExtResource("3_3wf7c")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 1.61971, 2.30829, 1.05123)
+
+[node name="Small Cube" parent="." instance=ExtResource("4_tdtyo")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.437996, 1.69172, 1.05123)
+
+[node name="Small Cube2" parent="." instance=ExtResource("4_tdtyo")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.12855, 1.69172, 1.05123)
+physics_material_override = SubResource("PhysicsMaterial_dm6h8")
+
+[node name="Small Cube3" parent="." instance=ExtResource("4_tdtyo")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.248157, 1.69172, 1.05123)
+physics_material_override = SubResource("PhysicsMaterial_umlwe")
