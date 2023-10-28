@@ -5,58 +5,58 @@ public partial class player : XROrigin3D
 {
 	float gravity = 9.8f;
 
-	XRCamera3D cameraNode;
-	CharacterBody3D characterBody;
-	CollisionShape3D characterCollider;
-	Hand leftHand;
-	Hand rightHand;
+	XRCamera3D CameraNode { get; set; }
+	CharacterBody3D CharacterBody { get; set; }
+	CollisionShape3D CharacterCollider { get; set; }
+	Hand LeftHand { get; set; }
+	Hand RightHand { get; set; }
 
-	Vector2 movementVector;
+	Vector2 MovementVector { get; set; }
 	Vector3 PushedByHands { get; set; }
 
 	public override void _Ready()
 	{
-		cameraNode = GetNode<XRCamera3D>("XRCamera3D");
-		characterBody = GetNode<CharacterBody3D>("CharacterBody3D");
-		characterCollider = characterBody.GetNode<CollisionShape3D>("CollisionShape3D");
+		CameraNode = GetNode<XRCamera3D>("XRCamera3D");
+		CharacterBody = GetNode<CharacterBody3D>("CharacterBody3D");
+		CharacterCollider = CharacterBody.GetNode<CollisionShape3D>("CollisionShape3D");
 
-		leftHand = GetNode<Hand>("Left Hand");
-		rightHand = GetNode<Hand>("Right Hand");
+		LeftHand = GetNode<Hand>("Left Hand");
+		RightHand = GetNode<Hand>("Right Hand");
 
-		movementVector = Vector2.Zero;
+		MovementVector = Vector2.Zero;
 		PushedByHands = Vector3.Zero;
 	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
 		//How high is the headset off of the ground?
-		((CapsuleShape3D)characterCollider.Shape).Height = cameraNode.Position.Y + 0.2f;
+		((CapsuleShape3D)CharacterCollider.Shape).Height = CameraNode.Position.Y + 0.2f;
 
 		//Modify the height of the collider accordingly
-		characterCollider.Position = new Vector3(characterCollider.Position.X, -cameraNode.Position.Y / 2 + 0.1f, characterCollider.Position.Z);
+		CharacterCollider.Position = new Vector3(CharacterCollider.Position.X, -CameraNode.Position.Y / 2 + 0.1f, CharacterCollider.Position.Z);
 
 		//move the body to the head
-		Vector3 headOffset = new Vector3(cameraNode.GlobalTransform.Basis.Z.Normalized().X, 0, cameraNode.GlobalTransform.Basis.Z.Normalized().Z).Normalized(); //could make this better when looking down
-		Vector3 headDif =  cameraNode.GlobalPosition + headOffset * .22f - characterBody.GlobalPosition;
-		characterBody.GlobalPosition += headDif;
+		Vector3 headOffset = new Vector3(CameraNode.GlobalTransform.Basis.Z.Normalized().X, 0, CameraNode.GlobalTransform.Basis.Z.Normalized().Z).Normalized(); //could make this better when looking down
+		Vector3 headDif =  CameraNode.GlobalPosition + headOffset * .22f - CharacterBody.GlobalPosition;
+		CharacterBody.GlobalPosition += headDif;
 		
 		//Set the player's velocity based on movement and gravity
-		characterBody.Velocity = PushedByHands.Y > .1
-									? PushedByHands + new Vector3(movementVector.X, 0, movementVector.Y)
-									: new Vector3(PushedByHands.X + movementVector.X, characterBody.Velocity.Y, PushedByHands.Z + movementVector.Y);
+		CharacterBody.Velocity = PushedByHands.Y > .1
+									? PushedByHands + new Vector3(MovementVector.X, 0, MovementVector.Y)
+									: new Vector3(PushedByHands.X + MovementVector.X, CharacterBody.Velocity.Y, PushedByHands.Z + MovementVector.Y);
 		
-		if (!characterBody.IsOnFloor())
+		if (!CharacterBody.IsOnFloor())
 		{
-			characterBody.Velocity -= new Vector3(0, gravity * (float)delta, 0);
+			CharacterBody.Velocity -= new Vector3(0, gravity * (float)delta, 0);
 		}
 
 		//Kinematic body does its thing
-		characterBody.MoveAndSlide();
+		CharacterBody.MoveAndSlide();
 
 		//Apply forces to all rigid bodies you hit
-		for (int i = 0; i < characterBody.GetSlideCollisionCount(); i++)
+		for (int i = 0; i < CharacterBody.GetSlideCollisionCount(); i++)
 		{
-			KinematicCollision3D iCollision = characterBody.GetSlideCollision(i);
+			KinematicCollision3D iCollision = CharacterBody.GetSlideCollision(i);
 			if (iCollision.GetCollider() is RigidBody3D rigidB)
 			{
 				rigidB.ApplyCentralForce(-iCollision.GetNormal() * 4); //is 4 enough?
@@ -64,9 +64,9 @@ public partial class player : XROrigin3D
 		}
 
 		//move the head to the body
-		headDif = characterBody.GlobalPosition - cameraNode.GlobalPosition - headOffset * .22f;
+		headDif = CharacterBody.GlobalPosition - CameraNode.GlobalPosition - headOffset * .22f;
 		GlobalPosition += headDif;
-		characterBody.GlobalPosition -= headDif;
+		CharacterBody.GlobalPosition -= headDif;
 	}
 	
 	public override void _Process(double delta)
@@ -74,24 +74,24 @@ public partial class player : XROrigin3D
 		if (!HandsPushing())
 		{
 			//get the left joystick as movement
-			movementVector = ((Vector2)leftHand.GetInput("primary")).Normalized();
+			MovementVector = ((Vector2)LeftHand.GetInput("primary")).Normalized();
 			
-			Vector3 forwardsV = -cameraNode.GlobalTransform.Basis.Z.Normalized()*movementVector.Y;
-			Vector3 sideV = cameraNode.GlobalTransform.Basis.X.Normalized()*movementVector.X;
-			movementVector = new Vector2(forwardsV.X + sideV.X, forwardsV.Z + sideV.Z).Normalized();
+			Vector3 forwardsV = -CameraNode.GlobalTransform.Basis.Z.Normalized()*MovementVector.Y;
+			Vector3 sideV = CameraNode.GlobalTransform.Basis.X.Normalized()*MovementVector.X;
+			MovementVector = new Vector2(forwardsV.X + sideV.X, forwardsV.Z + sideV.Z).Normalized();
 		}
 
-		leftHand.setOtherHandLocation(rightHand.GlobalPosition);
-		rightHand.setOtherHandLocation(leftHand.GlobalPosition);
+		LeftHand.setOtherHandLocation(RightHand.GlobalPosition);
+		RightHand.setOtherHandLocation(LeftHand.GlobalPosition);
 	}
 	
 	//Checks if the hands are grabbing anything, and if they are is the player moving themself via their hands
 	//Should this always be happening though, or only when grabbing? not sure...
 	public bool HandsPushing()
 	{
-		PushedByHands = leftHand.HandPushSelfAmount();
-		PushedByHands += rightHand.HandPushSelfAmount();
-		return leftHand.IsClimbing() || rightHand.IsClimbing();
+		PushedByHands = LeftHand.HandPushSelfAmount();
+		PushedByHands += RightHand.HandPushSelfAmount();
+		return LeftHand.IsClimbing() || RightHand.IsClimbing();
 	}
 	
 }

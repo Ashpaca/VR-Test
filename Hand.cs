@@ -4,50 +4,50 @@ using System.Diagnostics;
 
 public partial class Hand : XRController3D
 {
-	GameHand gameHand;
-	Area3D realHand;
-	Godot.Collections.Array<Rid> hands;
-	Transform3D handGrabbedPos;
-	Vector3 otherHandPosition;
+	GameHand GameHand { get; set; }
+	Area3D RealHand { get; set; }
+	Godot.Collections.Array<Rid> Hands { get; set; }
+	Transform3D HandGrabbedPos { get; set; }
+	Vector3 OtherHandPosition { get; set; }
 
-	public bool isGrabbing;
-	Node3D grabee;
+	public bool IsGrabbing { get; set; }
+	Node3D Grabee { get; set; }
 	[Export] 
 	private string throwNodeName = "";
 	[Export] 
-	private string gameHandName = "";
-	Node3D throwNode;
-	Vector3 throwDist;
-	Vector3 throwTorque;
+	private string GameHandName = "";
+	Node3D ThrowNode { get; set; }
+	Vector3 ThrowDist { get; set; }
+	Vector3 ThrowTorque { get; set; }
 
-	Vector3 distanceTo;
-	int numOfCollisions;
+	Vector3 DistanceTo { get; set; }
+	int NumOfCollisions { get; set; }
 
 	public override void _Ready()
 	{
-		gameHand = GetParent().GetNode<GameHand>(gameHandName);
-		realHand = GetNode<Area3D>("Area3D");
+		GameHand = GetParent().GetNode<GameHand>(GameHandName);
+		RealHand = GetNode<Area3D>("Area3D");
 
-		hands = new Godot.Collections.Array<Rid>();
-		hands.Add(gameHand.GetRid());
-		hands.Add(realHand.GetRid());
+		Hands = new Godot.Collections.Array<Rid>();
+		Hands.Add(GameHand.GetRid());
+		Hands.Add(RealHand.GetRid());
 
-		handGrabbedPos = gameHand.GlobalTransform;
-		otherHandPosition = gameHand.GlobalPosition;
+		HandGrabbedPos = GameHand.GlobalTransform;
+		OtherHandPosition = GameHand.GlobalPosition;
 
-		grabee = null;
-		isGrabbing = false;
-		throwNode = GetParent().GetNode<Node3D>(throwNodeName);
-		throwDist = Vector3.Zero;
-		throwTorque = Vector3.Zero;
+		Grabee = null;
+		IsGrabbing = false;
+		ThrowNode = GetParent().GetNode<Node3D>(throwNodeName);
+		ThrowDist = Vector3.Zero;
+		ThrowTorque = Vector3.Zero;
 
-		distanceTo = Vector3.Zero;
-		numOfCollisions = 0;
+		DistanceTo = Vector3.Zero;
+		NumOfCollisions = 0;
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		numOfCollisions = MoveGameHands();
+		NumOfCollisions = MoveGameHands();
 		CalculateHandVelocityAndTorque(delta);
 		ApplyForces();
 
@@ -58,58 +58,58 @@ public partial class Hand : XRController3D
 	{
 		if ((float)GetInput("grip_force") > 0.5f)
 		{
-			isGrabbing = true;
+			IsGrabbing = true;
 		}
 		else if ((float)GetInput("grip_force") < 0.1f)
 		{
-			isGrabbing = false;
+			IsGrabbing = false;
 		}
 	}
 
 	private void PickupsAndClimbing()
 	{
-		if (isGrabbing && grabee == null && numOfCollisions > 0)
+		if (IsGrabbing && Grabee == null && NumOfCollisions > 0)
 		{
-			for (int i = 0; i < numOfCollisions; i++)
+			for (int i = 0; i < NumOfCollisions; i++)
 			{
-				if (gameHand.GetSlideCollision(i).GetCollider() is Pickup grabeee)
+				if (GameHand.GetSlideCollision(i).GetCollider() is Pickup grabeee)
 				{
-					grabee = grabeee;
-					grabeee.PickedUp(gameHand);
+					Grabee = grabeee;
+					grabeee.PickedUp(GameHand);
 					return;
 				}
-				else if (gameHand.GetSlideCollision(i).GetCollider() is Climbable holdeee)
+				else if (GameHand.GetSlideCollision(i).GetCollider() is Climbable holdeee)
 				{
-					grabee = holdeee;
+					Grabee = holdeee;
 					return;
 				}
-				else if (gameHand.GetSlideCollision(i).GetCollider() is GameHand handeee)
+				else if (GameHand.GetSlideCollision(i).GetCollider() is GameHand handeee)
 				{
-					grabee = handeee;
-					gameHand.GrabedAsSecondaryHand(handeee);
+					Grabee = handeee;
+					GameHand.GrabedAsSecondaryHand(handeee);
 					return;
 				}
 			}
 		}
-		else if (!isGrabbing && grabee != null)
+		else if (!IsGrabbing && Grabee != null)
 		{
-			if (grabee is Pickup grabeee)
+			if (Grabee is Pickup grabeee)
 			{
-				grabeee.PutDown(gameHand, throwDist * 20, throwTorque * 10);
+				grabeee.PutDown(GameHand, ThrowDist * 20, ThrowTorque * 10);
 			}
-			else if (grabee is GameHand handeee)
+			else if (Grabee is GameHand handeee)
 			{
-				gameHand.ReleaseSecondaryHand(handeee, this.GlobalTransform);
+				GameHand.ReleaseSecondaryHand(handeee, this.GlobalTransform);
 			}
-			grabee = null;
+			Grabee = null;
 		}
-		else if (grabee is Climbable)
+		else if (Grabee is Climbable)
 		{
-			gameHand.GlobalTransform = handGrabbedPos;
+			GameHand.GlobalTransform = HandGrabbedPos;
 		}
 		else
 		{
-			handGrabbedPos = gameHand.GlobalTransform;
+			HandGrabbedPos = GameHand.GlobalTransform;
 		}
 		
 	}
@@ -117,55 +117,55 @@ public partial class Hand : XRController3D
 	private int MoveGameHands()
 	{
 		//What is the distance between my real hand and the ingame hand? Is it non-zero
-		distanceTo = GlobalPosition - gameHand.GlobalPosition;
-		if (distanceTo.Length() > 0.001)
+		DistanceTo = GlobalPosition - GameHand.GlobalPosition;
+		if (DistanceTo.Length() > 0.001)
 		{
-			gameHand.Velocity = distanceTo * 50;
-			if (distanceTo.Length() > .1)
+			GameHand.Velocity = DistanceTo * 50;
+			if (DistanceTo.Length() > .1)
 			{
-				gameHand.Velocity = distanceTo.Normalized() * 2.5f;
+				GameHand.Velocity = DistanceTo.Normalized() * 2.5f;
 			}
-			//gameHand.GlobalTransform = new Transform3D(gameHand.GlobalTransform.Basis, lastTransform.Origin);
+			//GameHand.GlobalTransform = new Transform3D(GameHand.GlobalTransform.Basis, lastTransform.Origin);
 
 			//Can you draw an uninterrupted line from my head to my real life hand. If so then my in game hand should teleport there
 			PhysicsDirectSpaceState3D space = GetViewport().World3D.DirectSpaceState;
-			PhysicsRayQueryParameters3D parameters = PhysicsRayQueryParameters3D.Create(GlobalPosition, GetParent().GetNode<XRCamera3D>("XRCamera3D").GlobalPosition, 1,hands);
+			PhysicsRayQueryParameters3D parameters = PhysicsRayQueryParameters3D.Create(GlobalPosition, GetParent().GetNode<XRCamera3D>("XRCamera3D").GlobalPosition, 1,Hands);
 			Godot.Collections.Dictionary result = space.IntersectRay(parameters);
-			if (!realHand.HasOverlappingBodies() && result.Count == 0 && !isGrabbing)
+			if (!RealHand.HasOverlappingBodies() && result.Count == 0 && !IsGrabbing)
 			{
-				gameHand.GlobalTransform = GlobalTransform;
-				gameHand.Velocity = Vector3.Zero;
+				GameHand.GlobalTransform = GlobalTransform;
+				GameHand.Velocity = Vector3.Zero;
 			}
-			gameHand.SetRotation(GlobalRotation, GlobalPosition, otherHandPosition);
+			GameHand.SetRotation(GlobalRotation, GlobalPosition, OtherHandPosition);
 		}
 		else
 		{
 			//If it isn't far away then just follow like normal, no extra velocity
-			gameHand.Velocity = Vector3.Zero;
+			GameHand.Velocity = Vector3.Zero;
 		}
 
 		//Kinematic body does its thing
-		gameHand.MoveAndSlide();
-		return gameHand.GetSlideCollisionCount();
+		GameHand.MoveAndSlide();
+		return GameHand.GetSlideCollisionCount();
 	}
 
 	private void CalculateHandVelocityAndTorque(double delta)
 	{
-		throwNode.GlobalPosition = throwNode.GlobalPosition.MoveToward(GlobalPosition, (float)delta * 2);
-		throwDist = GlobalPosition - throwNode.GlobalPosition;
-		throwTorque = throwNode.GlobalTransform.Basis.Z.Cross(GlobalTransform.Basis.Z);
+		ThrowNode.GlobalPosition = ThrowNode.GlobalPosition.MoveToward(GlobalPosition, (float)delta * 2);
+		ThrowDist = GlobalPosition - ThrowNode.GlobalPosition;
+		ThrowTorque = ThrowNode.GlobalTransform.Basis.Z.Cross(GlobalTransform.Basis.Z);
 
-		throwNode.GlobalTransform = new Transform3D(throwNode.GlobalTransform.Basis.Slerp(GlobalTransform.Basis, 0.3f), throwNode.GlobalTransform.Origin);
+		ThrowNode.GlobalTransform = new Transform3D(ThrowNode.GlobalTransform.Basis.Slerp(GlobalTransform.Basis, 0.3f), ThrowNode.GlobalTransform.Origin);
 	}
 
 	private void ApplyForces()
 	{
-		for (int i = 0; i < numOfCollisions; i++)
+		for (int i = 0; i < NumOfCollisions; i++)
 		{
-			KinematicCollision3D theCollision = gameHand.GetSlideCollision(i);
+			KinematicCollision3D theCollision = GameHand.GetSlideCollision(i);
 			if (theCollision.GetCollider() is RigidBody3D rigidB)
 			{
-				float hitForce = throwDist.Length() * 500 + throwTorque.Length() * (rigidB.GlobalPosition-gameHand.GlobalPosition).Length() * 100 + 10;
+				float hitForce = ThrowDist.Length() * 500 + ThrowTorque.Length() * (rigidB.GlobalPosition-GameHand.GlobalPosition).Length() * 100 + 10;
 				rigidB.ApplyCentralForce(-theCollision.GetNormal() * hitForce);
 			}
 		}
@@ -174,26 +174,26 @@ public partial class Hand : XRController3D
 	//returns the distance between the in game and real life hand
 	private Vector3 HandDistance()
 	{
-		if (distanceTo.Length() > 0.001)
+		if (DistanceTo.Length() > 0.001)
 		{
-			return distanceTo;
+			return DistanceTo;
 		}
 		return Vector3.Zero;
 	}
 
 	public bool IsClimbing()
 	{
-		return grabee is Climbable;
+		return Grabee is Climbable;
 	}
 
 	public bool HasPickup()
 	{
-		return grabee is Pickup;
+		return Grabee is Pickup;
 	}
 
 	public Vector3 HandPushSelfAmount()
 	{ 
-		if (isGrabbing && numOfCollisions > 0)
+		if (IsGrabbing && NumOfCollisions > 0)
 		{
 			return -HandDistance() * 5;
 		}
@@ -202,6 +202,6 @@ public partial class Hand : XRController3D
 
 	public void setOtherHandLocation(Vector3 otherPosition)
 	{
-		otherHandPosition = otherPosition;
+		OtherHandPosition = otherPosition;
 	}
 }

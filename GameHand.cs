@@ -4,10 +4,10 @@ using System;
 public partial class GameHand : CharacterBody3D
 {
 	Godot.Collections.Array meshbodys;
-	Vector3 pHandOriginalPos;
-	Vector3 sHandOriginalPos;
-	Vector3 pHandOriginalRot;
-	bool isPrimaryHand;
+	Vector3 PHandOriginalPos { get; set; }
+	Vector3 SHandOriginalPos  { get; set; }
+	Vector3 PHandOriginalRot  { get; set; }
+	bool IsPrimaryHand { get; set; }
 
 	public override void _Ready()
 	{
@@ -17,10 +17,10 @@ public partial class GameHand : CharacterBody3D
 			meshbodys.Add(GetChild(i));
 		}
 
-		pHandOriginalPos = Vector3.Zero;
-		sHandOriginalPos = Vector3.Zero;
-		pHandOriginalRot = Vector3.Zero;
-		isPrimaryHand = false;
+		PHandOriginalPos = Vector3.Zero;
+		SHandOriginalPos = Vector3.Zero;
+		PHandOriginalRot = Vector3.Zero;
+		IsPrimaryHand = false;
 	}
 
 	public void GrabedAsSecondaryHand(GameHand hand)
@@ -45,29 +45,29 @@ public partial class GameHand : CharacterBody3D
 
 	public void SetPrimaryHand(Vector3 secondaryHandPos)
 	{
-		isPrimaryHand = true;
-		pHandOriginalPos = GlobalPosition;
-		sHandOriginalPos = secondaryHandPos;
-		pHandOriginalRot = GlobalRotation;
+		IsPrimaryHand = true;
+		PHandOriginalPos = GlobalPosition;
+		SHandOriginalPos = secondaryHandPos;
+		PHandOriginalRot = GlobalRotation;
 	}
 
 	public void UnSetPrimaryHand()
 	{
-		isPrimaryHand = false;
+		IsPrimaryHand = false;
 	}
 
 	public void SetRotation(Vector3 rotation, Vector3 primaryPosition, Vector3 secondaryPosition)
 	{
-		if (!isPrimaryHand)
+		if (!IsPrimaryHand)
 		{
 			GlobalRotation = rotation;
 		}
 		else
 		{
 			/*GlobalRotation = new Vector3( 
-				Mathf.Atan2(secondaryPosition.Z - primaryPosition.Z, secondaryPosition.Y - primaryPosition.Y) - Mathf.Atan2(sHandOriginalPos.Z - pHandOriginalPos.Z, sHandOriginalPos.Y - pHandOriginalPos.Y) + pHandOriginalRot.X,
-				-Mathf.Atan2(secondaryPosition.Z - primaryPosition.Z, secondaryPosition.X - primaryPosition.X) - Mathf.Atan2(sHandOriginalPos.Z - pHandOriginalPos.Z, sHandOriginalPos.X - pHandOriginalPos.X) + pHandOriginalRot.Y,
-				Mathf.Atan2(secondaryPosition.Y - primaryPosition.Y, secondaryPosition.X - primaryPosition.X) - Mathf.Atan2(sHandOriginalPos.Y - pHandOriginalPos.Y, sHandOriginalPos.X - pHandOriginalPos.X) + pHandOriginalRot.Z
+				Mathf.Atan2(secondaryPosition.Z - primaryPosition.Z, secondaryPosition.Y - primaryPosition.Y) - Mathf.Atan2(SHandOriginalPos.Z - PHandOriginalPos.Z, SHandOriginalPos.Y - PHandOriginalPos.Y) + PHandOriginalRot.X,
+				-Mathf.Atan2(secondaryPosition.Z - primaryPosition.Z, secondaryPosition.X - primaryPosition.X) - Mathf.Atan2(SHandOriginalPos.Z - PHandOriginalPos.Z, SHandOriginalPos.X - PHandOriginalPos.X) + PHandOriginalRot.Y,
+				Mathf.Atan2(secondaryPosition.Y - primaryPosition.Y, secondaryPosition.X - primaryPosition.X) - Mathf.Atan2(SHandOriginalPos.Y - PHandOriginalPos.Y, sHandOriginalPos.X - PHandOriginalPos.X) + PHandOriginalRot.Z
 				);*/
 		}
 	}
