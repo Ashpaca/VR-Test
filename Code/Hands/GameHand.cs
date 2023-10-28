@@ -64,11 +64,9 @@ public partial class GameHand : CharacterBody3D
 		}
 		else
 		{
-			/*GlobalRotation = new Vector3( 
-				Mathf.Atan2(secondaryPosition.Z - primaryPosition.Z, secondaryPosition.Y - primaryPosition.Y) - Mathf.Atan2(SHandOriginalPos.Z - PHandOriginalPos.Z, SHandOriginalPos.Y - PHandOriginalPos.Y) + PHandOriginalRot.X,
-				-Mathf.Atan2(secondaryPosition.Z - primaryPosition.Z, secondaryPosition.X - primaryPosition.X) - Mathf.Atan2(SHandOriginalPos.Z - PHandOriginalPos.Z, SHandOriginalPos.X - PHandOriginalPos.X) + PHandOriginalRot.Y,
-				Mathf.Atan2(secondaryPosition.Y - primaryPosition.Y, secondaryPosition.X - primaryPosition.X) - Mathf.Atan2(SHandOriginalPos.Y - PHandOriginalPos.Y, sHandOriginalPos.X - PHandOriginalPos.X) + PHandOriginalRot.Z
-				);*/
+			Vector3 handRotationAxis = (SHandOriginalPos - PHandOriginalPos).Cross(secondaryPosition - primaryPosition);
+			float handRotationAngle = (SHandOriginalPos - PHandOriginalPos).AngleTo(secondaryPosition - primaryPosition);
+			Transform = Transform.Rotated(handRotationAxis, handRotationAngle);
 		}
 	}
 }

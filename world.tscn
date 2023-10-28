@@ -1,9 +1,9 @@
 [gd_scene load_steps=19 format=3 uid="uid://cc1ggq8hvg12r"]
 
-[ext_resource type="Script" path="res://World.cs" id="1_5c77t"]
+[ext_resource type="Script" path="res://Code/World.cs" id="1_5c77t"]
 [ext_resource type="PackedScene" uid="uid://c0frutnsxy5q4" path="res://player.tscn" id="2_urlwa"]
 [ext_resource type="PackedScene" uid="uid://dcq7omx57urww" path="res://stick.tscn" id="3_3wf7c"]
-[ext_resource type="Script" path="res://Climbable.cs" id="3_lus68"]
+[ext_resource type="Script" path="res://Code/Climbable.cs" id="3_lus68"]
 [ext_resource type="PackedScene" uid="uid://cxkxrvljqrfvf" path="res://small_cube.tscn" id="4_tdtyo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_c44i2"]

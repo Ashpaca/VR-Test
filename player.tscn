@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://c0frutnsxy5q4"]
 
-[ext_resource type="Script" path="res://player.cs" id="1_vnt2r"]
-[ext_resource type="Script" path="res://Hand.cs" id="2_vefgp"]
-[ext_resource type="Script" path="res://GameHand.cs" id="3_nk4r2"]
+[ext_resource type="Script" path="res://Code/player.cs" id="1_vnt2r"]
+[ext_resource type="Script" path="res://Code/Hands/Hand.cs" id="2_vefgp"]
+[ext_resource type="Script" path="res://Code/Hands/GameHand.cs" id="3_nk4r2"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_cdwt5"]
 radius = 0.1
@@ -32,7 +32,7 @@ tracker = &"left_hand"
 pose = &"grip"
 script = ExtResource("2_vefgp")
 throwNodeName = "Left Throw"
-gameHandName = "Left Game Hand"
+GameHandName = "Left Game Hand"
 
 [node name="Area3D" type="Area3D" parent="Left Hand"]
 collision_layer = 2
@@ -46,7 +46,7 @@ tracker = &"right_hand"
 pose = &"grip"
 script = ExtResource("2_vefgp")
 throwNodeName = "Right Throw"
-gameHandName = "Right Game Hand"
+GameHandName = "Right Game Hand"
 
 [node name="Area3D" type="Area3D" parent="Right Hand"]
 collision_layer = 2
