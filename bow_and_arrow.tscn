@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://di3ohpch3xa4b"]
+
+[ext_resource type="PackedScene" uid="uid://3e5x1gmfdvrt" path="res://Bow_and_Arrow.glb" id="1_82hhf"]
+[ext_resource type="Script" path="res://Code/BowAndArrow.cs" id="1_85nxb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jfooi"]
+size = Vector3(0.047668, 0.599386, 0.131734)
+
+[node name="Node3D" type="RigidBody3D"]
+script = ExtResource("1_85nxb")
+
+[node name="Bow_and_Arrow" parent="." instance=ExtResource("1_82hhf")]
+transform = Transform3D(1, 8.88178e-15, -2.08616e-07, -2.08616e-07, -4.37114e-08, -1, -2.51215e-15, 1, -4.37114e-08, 1.49012e-08, -0.05, -0.05)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 8.88178e-15, -2.08616e-07, -2.08616e-07, -4.37114e-08, -1, -2.51215e-15, 1, -4.37114e-08, 1.49012e-08, -0.05, -0.05)
+shape = SubResource("BoxShape3D_jfooi")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, -1.90227e-07, -1.92805e-07, -2.08616e-07, 0.469472, -0.882948, -2.10734e-08, 0.882948, 0.469472, -1.49012e-08, 0.05, 0.45)
+shape = SubResource("BoxShape3D_jfooi")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 1.90227e-07, -1.92805e-07, -2.08616e-07, -0.469472, -0.882948, -2.10734e-08, 0.882948, -0.469472, -1.49012e-08, 0.05, -0.55)
+shape = SubResource("BoxShape3D_jfooi")
+
+[editable path="Bow_and_Arrow"]

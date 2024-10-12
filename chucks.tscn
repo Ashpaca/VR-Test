@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://dxvgxygsa7gv8"]
+
+[ext_resource type="Script" path="res://Code/Hands/Pickup.cs" id="1_wcipj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w8b4m"]
+albedo_color = Color(0.392157, 0.392157, 0.392157, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tl05u"]
+material = SubResource("StandardMaterial3D_w8b4m")
+size = Vector3(0.1, 0.1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tgsxc"]
+size = Vector3(0.1, 0.1, 0.5)
+
+[node name="Chucks" type="RigidBody3D"]
+script = ExtResource("1_wcipj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0.125)
+mesh = SubResource("BoxMesh_tl05u")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0.125)
+shape = SubResource("BoxShape3D_tgsxc")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, -0.125)
+mesh = SubResource("BoxMesh_tl05u")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, -0.125)
+shape = SubResource("BoxShape3D_tgsxc")

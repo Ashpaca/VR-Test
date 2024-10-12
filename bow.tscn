@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://biexa2iuvivhr"]
+
+[ext_resource type="Script" path="res://Code/Hands/Pickup.cs" id="1_x82ty"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_di35x"]
+radius = 0.05
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pnpcx"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.32
+
+[sub_resource type="BoxMesh" id="BoxMesh_o1lku"]
+size = Vector3(0.05, 0.4, 0.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h34ms"]
+size = Vector3(0.05, 0.4, 0.05)
+
+[node name="Bow" type="RigidBody3D"]
+script = ExtResource("1_x82ty")
+SpawnOffset = Vector3(-0.05, 0.15, 0)
+
+[node name="BowString" type="Node3D" parent="."]
+transform = Transform3D(1.91069e-15, 4.37114e-08, 1, 1, -4.37114e-08, 0, 4.37114e-08, 1, -4.37114e-08, 0, 0, 0)
+
+[node name="Area3D" type="Area3D" parent="BowString"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BowString/Area3D"]
+shape = SubResource("SphereShape3D_di35x")
+
+[node name="Lower Bow String" type="MeshInstance3D" parent="BowString"]
+transform = Transform3D(1, 3.55271e-15, 0, -3.55271e-15, 1, 0, 4.23516e-22, 3.55271e-15, 1, 0.14, -0.14, 0)
+mesh = SubResource("CylinderMesh_pnpcx")
+skeleton = NodePath("../Upper Bow String")
+
+[node name="Upper Bow String" type="MeshInstance3D" parent="BowString"]
+transform = Transform3D(1, 7.10543e-15, 0, -7.10543e-15, 1, 0, 2.11758e-21, 2.13163e-14, 1, 0.14, 0.14, 0)
+mesh = SubResource("CylinderMesh_pnpcx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-3.09086e-08, -3.09086e-08, -1, -0.707107, 0.707107, 0, 0.707107, 0.707107, -4.37114e-08, 0, 0, 0.15)
+mesh = SubResource("BoxMesh_o1lku")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-3.09086e-08, -3.09086e-08, -1, -0.707107, 0.707107, 0, 0.707107, 0.707107, -4.37114e-08, 0, 0, 0.15)
+shape = SubResource("BoxShape3D_h34ms")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-3.09086e-08, 3.09086e-08, -1, 0.707107, 0.707107, 0, 0.707107, -0.707107, -4.37114e-08, 0, 0, -0.15)
+mesh = SubResource("BoxMesh_o1lku")
+skeleton = NodePath("../MeshInstance3D")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(-3.09086e-08, 3.09086e-08, -1, 0.707107, 0.707107, 0, 0.707107, -0.707107, -4.37114e-08, 0, 0, -0.15)
+shape = SubResource("BoxShape3D_h34ms")

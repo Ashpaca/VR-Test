@@ -1,8 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://c0frutnsxy5q4"]
+[gd_scene load_steps=10 format=3 uid="uid://bymvg5f4m5lw0"]
 
 [ext_resource type="Script" path="res://Code/player.cs" id="1_vnt2r"]
+[ext_resource type="Script" path="res://Code/SpawnArea.cs" id="2_kmdox"]
 [ext_resource type="Script" path="res://Code/Hands/Hand.cs" id="2_vefgp"]
-[ext_resource type="Script" path="res://Code/Hands/GameHand.cs" id="3_nk4r2"]
+[ext_resource type="PackedScene" uid="uid://bqvhvmw4qkcbh" path="res://right_hand.tscn" id="3_5o3yu"]
+[ext_resource type="PackedScene" uid="uid://cxxmilgoaia11" path="res://left_hand.tscn" id="4_o0c4f"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jjk6q"]
+radius = 0.3
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_cdwt5"]
 radius = 0.1
@@ -13,18 +18,31 @@ radius = 0.1
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iyyrh"]
 radius = 0.3
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_v7jet"]
-radius = 0.1
-
-[sub_resource type="SphereMesh" id="SphereMesh_rilvv"]
-radius = 0.1
-height = 0.2
-
 [node name="Player" type="XROrigin3D"]
 script = ExtResource("1_vnt2r")
 
 [node name="XRCamera3D" type="XRCamera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="Right Shoulder Grab" type="Area3D" parent="XRCamera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.305389, 0, 0.0986817)
+collision_layer = 31
+collision_mask = 31
+script = ExtResource("2_kmdox")
+PathToSpawnee = "res://just_arrow.tscn"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XRCamera3D/Right Shoulder Grab"]
+shape = SubResource("SphereShape3D_jjk6q")
+
+[node name="Left Shoulder Grab" type="Area3D" parent="XRCamera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.305, 0, 0.099)
+collision_layer = 31
+collision_mask = 31
+script = ExtResource("2_kmdox")
+PathToSpawnee = "res://just_bow.tscn"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XRCamera3D/Left Shoulder Grab"]
+shape = SubResource("SphereShape3D_jjk6q")
 
 [node name="Left Hand" type="XRController3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, 0)
@@ -68,30 +86,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, 0)
 [node name="Right Throw" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 0)
 
-[node name="Right Game Hand" type="CharacterBody3D" parent="."]
+[node name="Right Game Hand" parent="." instance=ExtResource("3_5o3yu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 0)
-collision_layer = 2
-collision_mask = 3
 motion_mode = 1
-script = ExtResource("3_nk4r2")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Right Game Hand"]
-shape = SubResource("SphereShape3D_v7jet")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Right Game Hand"]
-mesh = SubResource("SphereMesh_rilvv")
-skeleton = NodePath("../../Left Hand")
-
-[node name="Left Game Hand" type="CharacterBody3D" parent="."]
+[node name="Left Game Hand" parent="." instance=ExtResource("4_o0c4f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, 0)
-collision_layer = 2
-collision_mask = 3
 motion_mode = 1
-script = ExtResource("3_nk4r2")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Left Game Hand"]
-shape = SubResource("SphereShape3D_v7jet")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Left Game Hand"]
-mesh = SubResource("SphereMesh_rilvv")
-skeleton = NodePath("../../Left Hand")

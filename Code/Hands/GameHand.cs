@@ -1,72 +1,122 @@
 using Godot;
-using System;
 
 public partial class GameHand : CharacterBody3D
 {
 	Godot.Collections.Array meshbodys;
-	Vector3 PHandOriginalPos { get; set; }
-	Vector3 SHandOriginalPos  { get; set; }
-	Vector3 PHandOriginalRot  { get; set; }
+	Vector3 PrimaryOriginalPos { get; set; }
+	Vector3 SecondaryOriginalPos  { get; set; }
+	Basis PrimaryOriginalBasis  { get; set; }
 	bool IsPrimaryHand { get; set; }
+
+	Area3D GrabZone { get; set; }
+
+	Node3D OpenHandMeshes { get; set; }
+	Node3D ClosedHandMeshes { get; set; }
+
+	Vector3 originalHandVector;
 
 	public override void _Ready()
 	{
 		meshbodys = new Godot.Collections.Array{};
-		for (int i = GetChildCount() - 1; i >= 0; i--)
+		for (int i = 0; i < GetChildCount()-1; i++)
 		{
 			meshbodys.Add(GetChild(i));
 		}
+		GrabZone = GetNode<Area3D>("Grab Area");
 
-		PHandOriginalPos = Vector3.Zero;
-		SHandOriginalPos = Vector3.Zero;
-		PHandOriginalRot = Vector3.Zero;
+		OpenHandMeshes = GetNode("Meshes").GetNode<Node3D>("Open Hand");
+		ClosedHandMeshes = GetNode("Meshes").GetNode<Node3D>("Closed Hand");
+
+		PrimaryOriginalPos = Vector3.Zero;
+		SecondaryOriginalPos = Vector3.Zero;
+		PrimaryOriginalBasis = Basis.Identity;
 		IsPrimaryHand = false;
+		
+		originalHandVector = Vector3.Zero;
 	}
 
-	public void GrabedAsSecondaryHand(GameHand hand)
+	public void HoldingPickup()
+	{
+		((CollisionShape3D)meshbodys[0]).Disabled = true;
+	}
+
+	public void ReleasingPickup()
+	{
+		((CollisionShape3D)meshbodys[0]).Disabled = false;
+	}
+
+	public void Grabbing(bool isIt)
+	{
+		ClosedHandMeshes.Visible = isIt;
+		OpenHandMeshes.Visible = !isIt;
+	}
+
+	public void GrabedAsSecondaryHand(GameHand hand, Vector3 secondHandPos)
 	{
 		for (int i = 0; i < meshbodys.Count; i++)
 		{
 			((Node3D)meshbodys[i]).Reparent(hand);
 		}
-		hand.SetPrimaryHand(GlobalPosition);
+		hand.SetPrimaryHand(secondHandPos);
 	}
 
-	public void ReleaseSecondaryHand(GameHand hand, Transform3D originalLocation)
+	public void ReleaseHand(GameHand hand, Transform3D originalLocation)
 	{
 		GlobalTransform = originalLocation;
 		for (int i = 0; i < meshbodys.Count; i++)
 		{
 			((Node3D)meshbodys[i]).Reparent(this);
-			((Node3D)meshbodys[i]).GlobalTransform = originalLocation;;
+			((Node3D)meshbodys[i]).GlobalTransform = originalLocation;
 		}
 		hand.UnSetPrimaryHand();
 	}
 
-	public void SetPrimaryHand(Vector3 secondaryHandPos)
+	private void SetPrimaryHand(Vector3 secondaryHandPos)
 	{
 		IsPrimaryHand = true;
-		PHandOriginalPos = GlobalPosition;
-		SHandOriginalPos = secondaryHandPos;
-		PHandOriginalRot = GlobalRotation;
+		PrimaryOriginalPos = GlobalPosition;
+		SecondaryOriginalPos = secondaryHandPos;
+		PrimaryOriginalBasis = Transform.Basis;
+		originalHandVector = SecondaryOriginalPos - PrimaryOriginalPos;
 	}
 
-	public void UnSetPrimaryHand()
+	private void UnSetPrimaryHand()
 	{
 		IsPrimaryHand = false;
 	}
 
-	public void SetRotation(Vector3 rotation, Vector3 primaryPosition, Vector3 secondaryPosition)
+	public bool IsTwoHanded()
 	{
+		return IsPrimaryHand;
+	}
+
+	public Godot.Collections.Array<Node3D> Grabbables()
+	{
+		return GrabZone.GetOverlappingBodies();
+	}
+
+	public Godot.Collections.Array<Area3D> HandZones()
+	{
+		return GrabZone.GetOverlappingAreas();
+	}
+
+	public void SetRotation(Vector3 primaryCurrentPos, Vector3 secondaryCurrentPos, Basis primaryCurrentBasis)
+	{
+		// Set current rotation as a starting point
+		Transform = new Transform3D(primaryCurrentBasis, Transform.Origin);
+		
+		
+		// If you're not 2 handed then you're done 
 		if (!IsPrimaryHand)
 		{
-			GlobalRotation = rotation;
+			return;
 		}
-		else
-		{
-			Vector3 handRotationAxis = (SHandOriginalPos - PHandOriginalPos).Cross(secondaryPosition - primaryPosition);
-			float handRotationAngle = (SHandOriginalPos - PHandOriginalPos).AngleTo(secondaryPosition - primaryPosition);
-			Transform = Transform.Rotated(handRotationAxis, handRotationAngle);
-		}
+
+		// Rotate towards the second hand
+		Vector3 originalHandVectorBC = PrimaryOriginalBasis.Inverse() * originalHandVector;
+		Vector3 currentHandVectorBC = Basis.Inverse() * (secondaryCurrentPos - primaryCurrentPos);
+		Vector3 secondaryHandRotationAxis = Basis * originalHandVectorBC.Normalized().Cross(currentHandVectorBC.Normalized());
+		float secondaryHandRotationAngle = originalHandVectorBC.Normalized().AngleTo(currentHandVectorBC.Normalized());
+		Basis = Basis.Rotated(secondaryHandRotationAxis.Normalized(), secondaryHandRotationAngle).Orthonormalized();
 	}
 }

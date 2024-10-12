@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://gfmdy8x1bsq"]
+
+[ext_resource type="Script" path="res://Code/Climbable.cs" id="1_6wwx4"]
+[ext_resource type="PackedScene" uid="uid://dv18rwvox4g48" path="res://JustArrow.glb" id="2_vdhc7"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_wjxj4"]
+height = 0.8
+radius = 0.01
+
+[node name="RigidBody3D" type="RigidBody3D"]
+freeze = true
+script = ExtResource("1_6wwx4")
+
+[node name="JustArrow" parent="." instance=ExtResource("2_vdhc7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.163782, -3.64397e-05)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000408515, -0.358053, -8.49104e-09)
+shape = SubResource("CylinderShape3D_wjxj4")

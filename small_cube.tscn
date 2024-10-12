@@ -10,6 +10,7 @@ size = Vector3(0.2, 0.2, 0.2)
 
 [node name="Small Cube" type="RigidBody3D"]
 script = ExtResource("1_0hi3r")
+SpawnOffset = Vector3(-0.1, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_5jgwe")
