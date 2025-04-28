@@ -25,10 +25,6 @@ common/physics_ticks_per_second=240
 3d/sleep_threshold_linear=0.01
 3d/sleep_threshold_angular=0.01
 
-[rendering]
-
-renderer/rendering_method="gl_compatibility"
-
 [xr]
 
 openxr/enabled=true

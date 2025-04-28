@@ -1,9 +1,13 @@
 using Godot;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 public partial class player : XROrigin3D
 {
+	// This is temp code for rotating the player TCFRTP
+	Node3D theLevel;
+
 	float gravity = 9.8f;
 
 	XRCamera3D CameraNode { get; set; }
@@ -17,6 +21,9 @@ public partial class player : XROrigin3D
 	Vector3 PushedByHands { get; set; }
 	Vector2 ThumbstickRotation { get; set; }
 	bool AlreadyRotated = false;
+	bool movingViaAnalog = false;
+	float movementSpeed = 1.0f;
+	const double MAX_MOVEMENT_SPEED = 3;
 
 	Area3D RightShoulderGrabZone { get; set; }
 
@@ -25,6 +32,9 @@ public partial class player : XROrigin3D
 
 	public override void _Ready()
 	{
+		// TCFRTP
+		theLevel = GetParent().GetChild<Node3D>(0);
+
 		CameraNode = GetNode<XRCamera3D>("XRCamera3D");
 		CharacterBody = GetNode<CharacterBody3D>("CharacterBody3D");
 		CharacterCollider = CharacterBody.GetNode<CollisionShape3D>("CollisionShape3D");
@@ -100,8 +110,11 @@ public partial class player : XROrigin3D
 		{
 			
 			AlreadyRotated = true;
-			//this is not good. Two handed interactions don't work correctly and it rotates around the playspace
-			GlobalRotation += Vector3.Up * ThumbstickRotation.X * Mathf.Pi / 2;
+
+			//TCFRTP
+			theLevel.GlobalRotate(Vector3.Up, ThumbstickRotation.X * Mathf.Pi / 2);
+			Vector3 playerRotatedOffset = CharacterBody.GlobalPosition.Rotated(Vector3.Up, ThumbstickRotation.X * Mathf.Pi / 2);
+			GlobalPosition += playerRotatedOffset - CharacterBody.GlobalPosition;
 		}
 	}
 	
@@ -109,12 +122,25 @@ public partial class player : XROrigin3D
 	{	
 		if (!IsClimbing)
 		{
+			if (((Vector2)LeftHand.GetInput("primary")).LengthSquared() > .5f)
+			{
+				movingViaAnalog = true;
+				if (movementSpeed < MAX_MOVEMENT_SPEED)
+				{
+					movementSpeed += 0.05f;
+				}
+			}
+			else
+			{
+				movingViaAnalog = false;
+				movementSpeed = 1.0f;
+			}
 			//get the left joystick as movement
 			MovementVector = ((Vector2)LeftHand.GetInput("primary")).Normalized();
 			
 			Vector3 forwardsV = -CameraNode.GlobalTransform.Basis.Z.Normalized()*MovementVector.Y;
 			Vector3 sideV = CameraNode.GlobalTransform.Basis.X.Normalized()*MovementVector.X;
-			MovementVector = new Vector2(forwardsV.X + sideV.X, forwardsV.Z + sideV.Z).Normalized();
+			MovementVector = new Vector2(forwardsV.X + sideV.X, forwardsV.Z + sideV.Z).Normalized() * movementSpeed;
 
 			//handle Joystick rotation
 			ThumbstickRotation = (Vector2)RightHand.GetInput("primary");

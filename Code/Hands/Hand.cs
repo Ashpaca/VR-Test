@@ -165,7 +165,7 @@ public partial class Hand : XRController3D
 				
 				//add bow and arrow twohanded object
 				BowAndArrow bna = bowAndArrowScene.Instantiate<BowAndArrow>();
-				GetTree().Root.AddChild(bna);
+				GetTree().Root.GetChild(0).GetChild(0).AddChild(bna);
 				bna.GlobalTransform = SecondHand.GameHandObject.GlobalTransform;
 				bna.SpecialGrab(SecondHand.GameHandName == "Left Game Hand");
 				SecondHand.Grabee = bna;
@@ -203,7 +203,7 @@ public partial class Hand : XRController3D
 						{
 							numberOfArrows[0]--;
 						}
-						GetTree().Root.AddChild(spawnee);
+						GetTree().Root.GetChild(0).GetChild(0).AddChild(spawnee);
 						spawnee.GlobalTransform = GameHandObject.GlobalTransform;
 						spawnee.SpecialGrab(GameHandName == "Left Game Hand");
 						Grabee = spawnee;
@@ -263,13 +263,13 @@ public partial class Hand : XRController3D
 
 					//spawn bow, then bow.putdown
 					Bow droppedBow = justBowScene.Instantiate<Bow>();
-					GetTree().Root.AddChild(droppedBow);
+					GetTree().Root.GetChild(0).GetChild(0).AddChild(droppedBow);
 					droppedBow.PutDown(GameHandObject, ThrowDist * 20, ThrowTorque * 10);
 					droppedBow.GlobalTransform = bowLoc;
 
 					//spawn arrow in second hand
 					Arrow heldArrow = justArrowScene.Instantiate<Arrow>();
-					GetTree().Root.AddChild(heldArrow);
+					GetTree().Root.GetChild(0).GetChild(0).AddChild(heldArrow);
 					heldArrow.GlobalTransform = SecondHand.GameHandObject.GlobalTransform;
 					heldArrow.SpecialGrab(SecondHand.GameHandName == "Left Game Hand");
 					SecondHand.Grabee = heldArrow;
@@ -302,7 +302,7 @@ public partial class Hand : XRController3D
 
 					//second hand holds a spawned bow
 					Bow heldBow = justBowScene.Instantiate<Bow>();
-					GetTree().Root.AddChild(heldBow);
+					GetTree().Root.GetChild(0).GetChild(0).AddChild(heldBow);
 					heldBow.GlobalTransform = SecondHand.GameHandObject.GlobalTransform;
 					heldBow.SpecialGrab(SecondHand.GameHandName == "Left Game Hand");
 					SecondHand.Grabee = heldBow;
@@ -310,7 +310,7 @@ public partial class Hand : XRController3D
 
 					//spawn arrow that shoots forward based on hand distance
 					Arrow droppedArrow = justArrowScene.Instantiate<Arrow>();
-					GetTree().Root.AddChild(droppedArrow);
+					GetTree().Root.GetChild(0).GetChild(0).AddChild(droppedArrow);
 					GameHandObject.GlobalTransform = bowLoc;
 					droppedArrow.PutDown(GameHandObject, -GameHandObject.Basis.Y * (float) power * 60, Vector3.Zero);
 					droppedArrow.Shoot();
@@ -351,7 +351,7 @@ public partial class Hand : XRController3D
 
 			//this hand holds a spawned in arrow
 			Arrow heldArrow = justArrowScene.Instantiate<Arrow>();
-			GetTree().Root.AddChild(heldArrow);
+			GetTree().Root.GetChild(0).GetChild(0).AddChild(heldArrow);
 			heldArrow.GlobalTransform = GameHandObject.GlobalTransform;
 			heldArrow.SpecialGrab(GameHandName == "Left Game Hand");
 			Grabee = heldArrow;
@@ -359,7 +359,7 @@ public partial class Hand : XRController3D
 
 			//second hand holds a spawned in bow
 			Bow heldBow = justBowScene.Instantiate<Bow>();
-			GetTree().Root.AddChild(heldBow);
+			GetTree().Root.GetChild(0).GetChild(0).AddChild(heldBow);
 			heldBow.GlobalTransform = SecondHand.GameHandObject.GlobalTransform;
 			heldBow.SpecialGrab(SecondHand.GameHandName == "Left Game Hand");
 			SecondHand.Grabee = heldBow;
@@ -370,6 +370,19 @@ public partial class Hand : XRController3D
 			// Should this always run? or sometimes? or only when nothing else is happening? What does this do?
 		 	//something about climbing rope
 			HandGrabbedPos = GameHandObject.GlobalTransform;
+			for (int i = 0; i < NumOfGrabbables; i++)
+			{
+				if (GameHandObject.Grabbables()[i] is Pickup)
+				{
+					TriggerHapticPulse("haptic", 0.0, 1.0, 0.3, 0.0);
+					break;
+				}
+				if (GameHandObject.Grabbables()[i] is Climbable)
+				{
+					TriggerHapticPulse("haptic", 0.0, 1.0, 0.6, 0.0);
+					break;
+				}
+			}
 		}
 	}
 
@@ -385,9 +398,12 @@ public partial class Hand : XRController3D
 				GameHandObject.Velocity = DistanceTo.Normalized() * 2.5f;
 			}
 
-			//Can you draw an uninterrupted line from my head to my real life hand. If so then my in game hand should teleport there
+			//Can you draw an uninterrupted line from my head to my real life hand. If so then my in game hand should teleport there # layer 1 and 17
 			PhysicsDirectSpaceState3D space = GetViewport().World3D.DirectSpaceState;
-			PhysicsRayQueryParameters3D parameters = PhysicsRayQueryParameters3D.Create(GlobalPosition, GetParent().GetNode<XRCamera3D>("XRCamera3D").GlobalPosition, 1,Hands);
+			PhysicsRayQueryParameters3D parameters = PhysicsRayQueryParameters3D.Create(GlobalPosition, GetParent().GetNode<XRCamera3D>("XRCamera3D").GlobalPosition, 65537,Hands);
+			parameters.CollideWithAreas = true;
+			parameters.HitFromInside = true;
+			parameters.HitBackFaces = true;
 			Godot.Collections.Dictionary result = space.IntersectRay(parameters);
 			if (!RealHand.HasOverlappingBodies() && result.Count == 0 && !IsGrabbing)
 			{

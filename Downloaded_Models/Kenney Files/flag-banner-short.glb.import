@@ -1,0 +1,32 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://bbj45xskrses6"
+path="res://.godot/imported/flag-banner-short.glb-6e667cde0375e63af44d250d9a87a0fa.scn"
+
+[deps]
+
+source_file="res://Downloaded_Models/Kenney Files/flag-banner-short.glb"
+dest_files=["res://.godot/imported/flag-banner-short.glb-6e667cde0375e63af44d250d9a87a0fa.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Scene Root"
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+import_script/path=""
+_subresources={}
+gltf/embedded_image_handling=1

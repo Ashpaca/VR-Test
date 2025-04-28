@@ -20,7 +20,7 @@ public partial class Arrow : Pickup
 		{
 			return;
 		}
-		if (LinearVelocity.LengthSquared() > 10)
+		if (LinearVelocity.LengthSquared() > 10 && !(GlobalPosition + LinearVelocity).IsEqualApprox(Vector3.Up))
 		{
 			// need to make it aim where it is moving if it is moving fast. Change to use forces
 			LookAt(GlobalPosition + LinearVelocity, Vector3.Up);
@@ -34,14 +34,18 @@ public partial class Arrow : Pickup
 				
 				QueueFree();
 				Climbable stuckArrow = stuckArrowScene.Instantiate<Climbable>();
-				GetTree().Root.AddChild(stuckArrow);
+				GetTree().Root.GetChild(0).GetChild(0).AddChild(stuckArrow);
 				stuckArrow.GlobalTransform = GlobalTransform;
-				
-				//for (int i = GetChildCount() - 1; i >= 0; i--)
-				//{
-				//	GetChild(i).Reparent(pointyBit.GetOverlappingBodies()[0]); 	// they also need to be added to that objects meshbodies list if it is a pick up
-																				// if it isn't a pick up then it should probably use the comment out code instead
-				//}
+			}
+			else if (pointyBit.HasOverlappingBodies() && pointyBit.GetOverlappingBodies()[0] is Pickup hitObj)
+			{
+				foreach(Node body in Meshbodys)
+				{
+					hitObj.Meshbodys.Add(body);
+					body.Reparent(hitObj);
+				}
+				hitObj.ApplyCentralImpulse(LinearVelocity);
+				QueueFree();
 			}
 		}
 

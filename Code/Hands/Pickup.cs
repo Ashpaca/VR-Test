@@ -1,16 +1,17 @@
+using System.Collections.Generic;
 using Godot;
-using System;
+using Godot.Collections;
 
 public partial class Pickup : RigidBody3D
 {
-	Godot.Collections.Array Meshbodys { get; set; }
-	Vector3 GrabOffset { get; set; }
+	public List<Node> Meshbodys { get; set; }
+	public Vector3 GrabOffset { get; set; }
 	[Export]
 	public Vector3 SpawnOffset { get; set; }
 
 	public override void _Ready()
 	{
-		Meshbodys = new Godot.Collections.Array{};
+		Meshbodys = new List<Node>{};
 		for (int i = 0; i < GetChildCount(); i++)
 		{
 			Meshbodys.Add(GetChild(i));

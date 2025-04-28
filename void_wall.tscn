@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqbwycek0b5ue"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0goif"]
+size = Vector3(4, 20, 1)
+
+[sub_resource type="FogMaterial" id="FogMaterial_go2cj"]
+density = 5.0
+albedo = Color(0.188235, 0.0823529, 0.0352941, 1)
+edge_fade = 0.110957
+
+[node name="Void Wall" type="StaticBody3D"]
+collision_layer = 32768
+collision_mask = 32768
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+shape = SubResource("BoxShape3D_0goif")
+
+[node name="FogVolume" type="FogVolume" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+size = Vector3(4, 20, 1)
+material = SubResource("FogMaterial_go2cj")

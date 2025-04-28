@@ -1,0 +1,198 @@
+[gd_scene load_steps=4 format=3 uid="uid://psfh3p4ij2gb"]
+
+[ext_resource type="Script" path="res://Code/Climbable.cs" id="1_mig3r"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ls21c"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f283c"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Rope" type="StaticBody3D"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node2"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node2"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node3" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node3"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node3"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node4" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node4"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node4"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node5" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node5"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node5"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node6" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node6"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node6"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node7" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node7"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node7"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node8" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node8"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node8"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="Rope Node9" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 0, 0)
+script = ExtResource("1_mig3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Rope Node9"]
+mesh = SubResource("BoxMesh_ls21c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Rope Node9"]
+shape = SubResource("BoxShape3D_f283c")
+
+[node name="joint" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0768885, 0, 0)
+node_a = NodePath("..")
+node_b = NodePath("../Rope Node")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint2" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.221997, 0, 0)
+node_a = NodePath("../Rope Node")
+node_b = NodePath("../Rope Node2")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint3" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.374493, 0, 0)
+node_a = NodePath("../Rope Node2")
+node_b = NodePath("../Rope Node3")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint4" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.523252, 0, 0)
+node_a = NodePath("../Rope Node3")
+node_b = NodePath("../Rope Node4")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint5" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.670217, 0, 0)
+node_a = NodePath("../Rope Node4")
+node_b = NodePath("../Rope Node5")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint6" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.830067, 0, 0)
+node_a = NodePath("../Rope Node5")
+node_b = NodePath("../Rope Node6")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint7" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.978122, 0, 0)
+node_a = NodePath("../Rope Node6")
+node_b = NodePath("../Rope Node7")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint8" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.12668, 0, 0)
+node_a = NodePath("../Rope Node7")
+node_b = NodePath("../Rope Node8")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
+
+[node name="joint9" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27563, 0, 0)
+node_a = NodePath("../Rope Node8")
+node_b = NodePath("../Rope Node9")
+exclude_nodes_from_collision = false
+angular_limit_y/upper_angle = 1.5708
+angular_limit_y/lower_angle = -1.5708
+angular_limit_z/upper_angle = 1.5708
+angular_limit_z/lower_angle = -1.5708
